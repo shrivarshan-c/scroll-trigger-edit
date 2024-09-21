@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="w-full bg-zinc-900">
-        <audio id="background-audio" loop>
+        <audio id="background-audio" >
             <source src="audio.mp3" type="audio/mpeg">
         </audio>
     
@@ -23,23 +23,27 @@
 
     <script>
         const audio = document.getElementById('background-audio');
-        let isPlaying = false;
 
         // Function to play audio
         function playAudio() {
-            if (!isPlaying) {
-                audio.play().then(() => {
-                    isPlaying = true;
-                }).catch(error => {
-                    console.log("Audio playback failed:", error);
-                });
-            }
+            audio.play().catch(error => {
+                console.log("Audio playback failed:", error);
+            });
         }
 
-        // Event listener for scroll
-        window.addEventListener('scroll', function playAudioOnScroll() {
+        // Function to reset audio
+        function resetAudio() {
+            audio.currentTime = 0; // Reset to start
             playAudio();
-            window.removeEventListener('scroll', playAudioOnScroll); // Remove the listener after first scroll
+        }
+
+        // Event listener for click
+        window.addEventListener('click', function handleClick() {
+            if (audio.paused) {
+                playAudio(); // Play if paused
+            } else {
+                resetAudio(); // Reset and play if already playing
+            }
         });
 
         const canvas = document.querySelector("canvas");
@@ -97,7 +101,6 @@
                     start: "top top",
                     scrub: 1,
                     end: "bottom bottom",
-                  
                 },
             });
             tl.to(frames, {
